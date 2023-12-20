@@ -24,13 +24,14 @@ function createWindow() {
   // 创建一个新的浏览器窗口
   win = new BrowserWindow({
     // 窗口图标
-    icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    icon: path.join(process.env.VITE_PUBLIC, "icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
   });
 
   // 测试主进程向渲染进程发送消息
+  // 请注意，此消息将在渲染进程加载后发送
   win.webContents.on("did-finish-load", () => {
     win?.webContents.send("main-process-message", new Date().toLocaleString());
   });

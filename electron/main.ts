@@ -1,5 +1,6 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
+import Store from "electron-store";
 
 // 构建的目录结构
 //
@@ -28,6 +29,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
+    frame: false,
   });
 
   // 测试主进程向渲染进程发送消息
@@ -66,3 +68,33 @@ app.on("activate", () => {
 
 // 当应用准备就绪后，创建窗口
 app.whenReady().then(createWindow);
+
+/** My Code */
+const store = new Store();
+
+ipcMain.on("mini", () => {
+  win?.minimize();
+});
+
+ipcMain.on("toggleWindowSize", () => {
+  // 窗口是否最大化
+  if (win?.isMaximized()) {
+    // 恢复窗口大小
+    win?.restore();
+  } else {
+    // 放大窗口
+    win?.maximize();
+  }
+});
+// 窗口关闭事件
+ipcMain.on("close", () => {
+  win?.close();
+});
+
+// 数据存储
+ipcMain.on("store-get", async (event, val) => {
+  event.returnValue = store.get(val);
+});
+ipcMain.on("store-set", async (event, key, val) => {
+  store.set(key, val);
+});

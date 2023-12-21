@@ -1,7 +1,23 @@
 import { cn } from "@/lib/utils";
 import ManageIcon from "@/assets/manage-icon.png";
+import { useNavigate } from "react-router-dom";
 
 export default function MainSidebar() {
+  const ng = useNavigate();
+  const world_path = window.electron.store.get("world_path");
+
+  function toAddonsManage() {
+    if (world_path) {
+      ng("/addonsManage");
+    } else {
+      ng("/error", {
+        state: {
+          errorMessage: "没有加载到世界路径，请先配置世界路径",
+        },
+      });
+    }
+  }
+
   return (
     <div className="h-full w-1/6 flex flex-col gap-4">
       {/* sidebar */}
@@ -15,9 +31,13 @@ export default function MainSidebar() {
         >
           <img
             src={ManageIcon}
+            onClick={() => toAddonsManage}
             className="w-1/2 h-1/2 object-center transition-transform hover:scale-110 cursor-pointer"
           />
-          <span className="font-bold text-center transition-transform hover:scale-110 cursor-pointer">
+          <span
+            onClick={() => toAddonsManage}
+            className="font-bold text-center transition-transform hover:scale-110 cursor-pointer"
+          >
             附加包管理
           </span>
         </div>

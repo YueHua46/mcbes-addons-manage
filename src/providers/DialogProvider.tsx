@@ -84,9 +84,12 @@ export function DialogProvider({ children }: DialogProviderProps) {
             <AlertDialogDescription>{state.content}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => state.isCancel && state.cancel()}>
-              {state.cancelText}
-            </AlertDialogCancel>
+            {state.isCancel ? (
+              <AlertDialogCancel onClick={() => state.cancel()}>
+                {state.cancelText}
+              </AlertDialogCancel>
+            ) : null}
+
             <AlertDialogAction onClick={() => state.confirm()}>
               {state.actionText}
             </AlertDialogAction>

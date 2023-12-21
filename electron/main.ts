@@ -1,6 +1,7 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import path from "node:path";
 import Store from "electron-store";
+import fs from "fs-extra";
 
 // 构建的目录结构
 //
@@ -98,4 +99,73 @@ ipcMain.on("store-get", async (event, val) => {
 });
 ipcMain.on("store-set", async (event, key, val) => {
   store.set(key, val);
+});
+
+// 检查目标目录是否无误
+ipcMain.on("checkingIsWhole", async (event) => {
+  console.log("main checkingIsWhole start");
+  const worldSaveLocation = store.get("worldSaveLocation") as string;
+  const files = ["level.dat", "resource_packs", "behavior_packs", "db"];
+  // 第一步校验世界存档路径是否存在
+  console.log("worldSaveLocation", worldSaveLocation);
+  if (!worldSaveLocation) {
+    console.log("");
+    event.returnValue = {
+      isWhole: false,
+      msg: "世界存档路径不存在",
+    };
+    return;
+  }
+  fs.stat(worldSaveLocation, (err, stats) => {
+    if (err) {
+      event.returnValue = {
+        isWhole: false,
+        msg: "世界存档路径不存在",
+      };
+      return;
+    }
+    if (!stats.isDirectory()) {
+      event.returnValue = {
+        isWhole: false,
+        msg: "世界存档不是一个文件夹",
+      };
+      return;
+    }
+    // 第二步校验世界存档路径下是否存在以下文件
+    for (const file of files) {
+      if (!fs.existsSync(path.join(worldSaveLocation, file))) {
+        event.returnValue = {
+          isWhole: false,
+          msg: "不存在文件: " + file + "请检查世界存档路径是否正确",
+        };
+        return;
+      }
+    }
+    event.returnValue = {
+      isWhole: true,
+      msg: "检查通过",
+    };
+    return;
+  });
+  return false;
+});
+
+ipcMain.handle("readDirectory", async (event, directory) => {
+  try {
+    // 读取目录中的文件
+    const files = await fs.readdir(directory);
+    return files;
+  } catch (error: any) {
+    throw new Error(`读取目录失败: ${error.message}`);
+  }
+});
+
+ipcMain.handle("getFileInfo", async (event, filePath) => {
+  try {
+    // 获取文件信息
+    const stats = await fs.stat(filePath);
+    return stats;
+  } catch (error: any) {
+    throw new Error(`获取文件信息失败: ${error.message}`);
+  }
 });

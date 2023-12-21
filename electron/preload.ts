@@ -1,18 +1,23 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, dialog, ipcRenderer } from "electron";
 
 // --------- 向渲染进程暴露一些API ---------
 contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer));
 contextBridge.exposeInMainWorld("process", withPrototype(process));
-contextBridge.exposeInMainWorld("electron", {
-  store: {
-    get(key: string) {
-      return ipcRenderer.sendSync("store-get", key);
+contextBridge.exposeInMainWorld(
+  "electron",
+  withPrototype({
+    store: {
+      get(key: string) {
+        return ipcRenderer.sendSync("store-get", key);
+      },
+      set(property: string, val: any) {
+        ipcRenderer.send("store-set", property, val);
+      },
     },
-    set(property: string, val: any) {
-      ipcRenderer.send("store-set", property, val);
-    },
-  },
-});
+    checkingIsWhole: () => ipcRenderer.sendSync("checkingIsWhole"),
+  })
+);
+contextBridge.exposeInMainWorld("dialog", withPrototype(dialog));
 
 // `exposeInMainWorld`无法检测`prototype`的属性和方法，手动修补它。
 function withPrototype(obj: Record<string, any>) {

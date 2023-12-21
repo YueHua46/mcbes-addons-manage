@@ -30,5 +30,10 @@ interface Window {
       set: (key: string, val: any) => void;
       // any other methods you've defined...
     };
+    checkingIsWhole: () => {
+      isWhole: boolean;
+      msg: string;
+    };
   };
+  dialog: import("electron").Dialog;
 }

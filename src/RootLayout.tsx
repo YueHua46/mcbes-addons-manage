@@ -6,14 +6,15 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 
 export default function RootLayout() {
-  const [worldPath, setWorldPath] = useState("");
+  const [worldSaveLocation, setWorldSaveLocation] = useState(
+    window.electron.store.get("worldSaveLocation")
+  );
   const { open, close } = useDialog();
   const ng = useNavigate();
 
   useEffect(() => {
-    setWorldPath(window.electron.store.get("world_path"));
-    console.log("worldPath", worldPath);
-    if (!worldPath) {
+    console.log("worldSaveLocation", worldSaveLocation);
+    if (!worldSaveLocation) {
       console.log("open", open);
       open({
         title: "提示",
@@ -32,6 +33,8 @@ export default function RootLayout() {
           close();
         },
       });
+    } else {
+      ng("/addonsManage");
     }
   }, []);
 
@@ -42,7 +45,7 @@ export default function RootLayout() {
           <Header />
         </div>
       </header>
-      <main className="p-4 flex-1">
+      <main className="p-4 flex-1 overflow-hidden">
         <Main />
       </main>
     </div>

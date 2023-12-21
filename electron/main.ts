@@ -72,6 +72,7 @@ app.whenReady().then(createWindow);
 /** My Code */
 const store = new Store();
 
+// 监听窗口最小化事件
 ipcMain.on("mini", () => {
   win?.minimize();
 });

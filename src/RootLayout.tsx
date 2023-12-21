@@ -3,8 +3,10 @@ import useDialog from "@/hooks/useDialog";
 
 export default function RootLayout({
   children,
+  className,
 }: {
   children: React.ReactNode;
+  className?: string;
 }) {
   const [worldPath, setWorldPath] = useState("");
   const { open, close } = useDialog();
@@ -30,5 +32,5 @@ export default function RootLayout({
     }
   }, []);
 
-  return <div>{children}</div>;
+  return <div className={className}>{children}</div>;
 }

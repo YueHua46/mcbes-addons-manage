@@ -31,8 +31,7 @@ interface DialogProviderWithCancel {
 }
 
 interface DialogProviderWithoutCancel {
-  isCancel?: false;
-  cancel?: () => void;
+  isCancel: false;
 }
 
 export type DialogProviderState = DialogProviderBaseState &
@@ -64,16 +63,17 @@ export function DialogProvider({ children }: DialogProviderProps) {
 
   const value = {
     open: (dialogState: DialogProviderState) => {
-      console.log("dialogState", dialogState);
-      setState({ ...dialogState, isOpen: true });
+      setState({ ...dialogState });
+      setState((pre) => ({ ...pre, isOpen: true }));
     },
     close: () => {
-      setState({ ...initialState, isOpen: false });
+      setState({ ...initialState });
+      setState((pre) => ({ ...pre, isOpen: false }));
     },
   };
 
   return (
-    <div>
+    <div className="w-full h-full">
       <DialogProviderContext.Provider value={value}>
         {children}
       </DialogProviderContext.Provider>

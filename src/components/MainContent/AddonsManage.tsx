@@ -29,13 +29,12 @@ export default function AddonsManage() {
     });
     console.log("filesPath", filesPath);
     // 加载附加包
-    console.log("正在加载附加包，请稍后...");
     setLoading({
       hint: "正在加载附加包，请稍后...",
       loading: true,
     });
 
-    setTimeout(() => setLoading({ loading: false }), 2000);
+    window.dialog.readFile();
   }
 
   return (

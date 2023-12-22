@@ -161,10 +161,10 @@ async function handleFileOpen(
     return filePaths;
   }
 }
-
-ipcMain.handle("dialog:openFile", handleFileOpen);
-
-ipcMain.handle("readDirectory", async (event, directory) => {
+async function handleReadFolder(
+  event: Electron.IpcMainInvokeEvent,
+  directory: string
+) {
   try {
     // 读取目录中的文件
     const files = await fs.readdir(directory);
@@ -172,14 +172,18 @@ ipcMain.handle("readDirectory", async (event, directory) => {
   } catch (error: any) {
     throw new Error(`读取目录失败: ${error.message}`);
   }
-});
+}
 
-ipcMain.handle("getFileInfo", async (event, filePath) => {
-  try {
-    // 获取文件信息
-    const stats = await fs.stat(filePath);
-    return stats;
-  } catch (error: any) {
-    throw new Error(`获取文件信息失败: ${error.message}`);
-  }
-});
+ipcMain.handle("dialog:openFile", handleFileOpen);
+
+ipcMain.handle("readFolder", handleReadFolder);
+
+// 分别读取：
+// 1. world_resource_packs.json
+// 2. world_behavior_packs.json
+// 3. resource_packs文件夹内的每个文件夹内对应的拥有manifest.json的文件目录内的如下文件：
+//  3.1 manifest.json
+//  3.2 pack_icon.icon（如果有）
+// 4. behavior_packs文件夹内的每个文件夹内对应的拥有manifest.json的文件目录内的如下文件：
+//  4.1 manifest.json
+//  4.2 pack_icon.icon（如果有）

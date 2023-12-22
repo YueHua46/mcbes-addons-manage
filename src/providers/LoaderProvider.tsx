@@ -43,7 +43,7 @@ export default function LoaderProvider({
       console.log("set loader --- set loader", loading);
 
       setLoadingText(hint);
-      setLoading((pre) => loading);
+      setLoading(() => loading);
     },
   };
 
@@ -52,7 +52,7 @@ export default function LoaderProvider({
       {children}
       <div className={classList}>
         <span className="loader absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></span>
-        <h2 className="font-bold absolute top-[60%] left-[53%] -translate-x-1/2 -translate-y-1/2">
+        <h2 className="font-bold text-2xl absolute top-[60%] left-[53%] -translate-x-1/2 -translate-y-1/2">
           {loadingText}
         </h2>
       </div>

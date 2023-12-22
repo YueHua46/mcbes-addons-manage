@@ -34,6 +34,7 @@ interface Window {
       isWhole: boolean;
       msg: string;
     };
+    readFolder: (path: string) => string[];
   };
   dialog: {
     openFile: (options: Electron.OpenDialogOptions) => Promise<string[]>;

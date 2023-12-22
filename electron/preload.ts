@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld(
       },
     },
     checkingIsWhole: () => ipcRenderer.sendSync("checkingIsWhole"),
+    readFolder: (path: string) => ipcRenderer.invoke("readFolder", path),
   })
 );
 contextBridge.exposeInMainWorld(

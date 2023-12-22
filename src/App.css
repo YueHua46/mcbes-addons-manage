@@ -1,3 +1,5 @@
+@import url("./css/loader.css");
+
 .drag {
   -webkit-app-region: drag;
 }
@@ -62,3 +64,5 @@ html,body {
 .custom-scrollbar::-webkit-scrollbar-track {
   background-color: #f1f1f1;
 }
+
+ 

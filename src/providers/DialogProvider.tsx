@@ -63,11 +63,9 @@ export function DialogProvider({ children }: DialogProviderProps) {
 
   const value = {
     open: (dialogState: DialogProviderState) => {
-      setState({ ...dialogState });
-      setState((pre) => ({ ...pre, isOpen: true }));
+      setState({ ...dialogState, isOpen: true });
     },
     close: () => {
-      setState({ ...initialState });
       setState((pre) => ({ ...pre, isOpen: false }));
     },
   };

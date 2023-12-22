@@ -150,6 +150,20 @@ ipcMain.on("checkingIsWhole", async (event) => {
   return false;
 });
 
+async function handleFileOpen(
+  event: Electron.IpcMainInvokeEvent,
+  options: Electron.OpenDialogOptions
+) {
+  console.log("handleFileOpen --> options", options);
+  const { canceled, filePaths } = await dialog.showOpenDialog(options);
+
+  if (!canceled) {
+    return filePaths;
+  }
+}
+
+ipcMain.handle("dialog:openFile", handleFileOpen);
+
 ipcMain.handle("readDirectory", async (event, directory) => {
   try {
     // 读取目录中的文件

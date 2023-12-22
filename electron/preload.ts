@@ -2,7 +2,6 @@ import { contextBridge, dialog, ipcRenderer } from "electron";
 
 // --------- 向渲染进程暴露一些API ---------
 contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer));
-contextBridge.exposeInMainWorld("process", withPrototype(process));
 contextBridge.exposeInMainWorld(
   "electron",
   withPrototype({
@@ -17,7 +16,13 @@ contextBridge.exposeInMainWorld(
     checkingIsWhole: () => ipcRenderer.sendSync("checkingIsWhole"),
   })
 );
-contextBridge.exposeInMainWorld("dialog", withPrototype(dialog));
+contextBridge.exposeInMainWorld(
+  "dialog",
+  withPrototype({
+    openFile: (options: Electron.OpenDialogOptions) =>
+      ipcRenderer.invoke("dialog:openFile", options),
+  })
+);
 
 // `exposeInMainWorld`无法检测`prototype`的属性和方法，手动修补它。
 function withPrototype(obj: Record<string, any>) {

@@ -35,5 +35,7 @@ interface Window {
       msg: string;
     };
   };
-  dialog: import("electron").Dialog;
+  dialog: {
+    openFile: (options: Electron.OpenDialogOptions) => Promise<string[]>;
+  };
 }

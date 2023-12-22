@@ -39,7 +39,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <div className={cn("h-full flex flex-col")}>
+    <div className={cn("h-full flex flex-col relative")}>
       <header className="drag">
         <div className="p-4">
           <Header />
